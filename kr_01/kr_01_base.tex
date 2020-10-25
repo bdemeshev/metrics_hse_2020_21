@@ -1,0 +1,311 @@
+\documentclass[12pt]{article}
+
+\usepackage{tikz} % картинки в tikz
+\usepackage{microtype} % свешивание пунктуации
+
+\usepackage{array} % для столбцов фиксированной ширины
+
+\usepackage{indentfirst} % отступ в первом параграфе
+
+\usepackage{sectsty} % для центрирования названий частей
+\allsectionsfont{\centering}
+
+\usepackage{amsmath, amssymb, amsthm} % куча стандартных математических плюшек
+
+\usepackage{amsfonts}
+
+\usepackage{comment}
+
+\usepackage[top=2cm, left=1.2cm, right=1.2cm, bottom=2cm]{geometry} % размер текста на странице
+
+\usepackage{lastpage} % чтобы узнать номер последней страницы
+
+\usepackage{enumitem} % дополнительные плюшки для списков
+%  например \begin{enumerate}[resume] позволяет продолжить нумерацию в новом списке
+\usepackage{caption}
+
+
+\usepackage{hyperref} % гиперссылки
+
+\usepackage{multicol} % текст в несколько столбцов
+
+
+\usepackage{fancyhdr} % весёлые колонтитулы
+\pagestyle{fancy}
+\lhead{Эконометрика, НИУ-ВШЭ}
+\chead{контрольная работа №1}
+\rhead{2020-10-22}
+\lfoot{Вариант $\xi$}
+\cfoot{Ни пуха, ни пера!}
+\rfoot{\thepage/3}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+
+
+
+\usepackage{todonotes} % для вставки в документ заметок о том, что осталось сделать
+% \todo{Здесь надо коэффициенты исправить}
+% \missingfigure{Здесь будет Последний день Помпеи}
+% \listoftodos - печатает все поставленные \todo'шки
+
+
+% более красивые таблицы
+\usepackage{booktabs}
+% заповеди из докупентации:
+% 1. Не используйте вертикальные линни
+% 2. Не используйте двойные линии
+% 3. Единицы измерения - в шапку таблицы
+% 4. Не сокращайте .1 вместо 0.1
+% 5. Повторяющееся значение повторяйте, а не говорите "то же"
+
+
+
+\usepackage{fontspec}
+\usepackage{polyglossia}
+
+\setmainlanguage{russian}
+\setotherlanguages{english}
+
+% download "Linux Libertine" fonts:
+% http://www.linuxlibertine.org/index.php?id=91&L=1
+\setmainfont{Linux Libertine O} % or Helvetica, Arial, Cambria
+% why do we need \newfontfamily:
+% http://tex.stackexchange.com/questions/91507/
+\newfontfamily{\cyrillicfonttt}{Linux Libertine O}
+
+\AddEnumerateCounter{\asbuk}{\russian@alph}{щ} % для списков с русскими буквами
+\setlist[enumerate, 2]{label=\asbuk*),ref=\asbuk*}
+
+%% эконометрические сокращения
+\let\P\relax
+\DeclareMathOperator{\Cov}{\mathbb{C}ov}
+\DeclareMathOperator{\Corr}{\mathbb{C}orr}
+\DeclareMathOperator{\Var}{\mathbb{V}ar}
+\DeclareMathOperator{\E}{\mathbb{E}}
+\DeclareMathOperator{\P}{\mathbb{P}}
+\DeclareMathOperator{\tr}{trace}
+\def \hb{\hat{\beta}}
+\def \hs{\hat{\sigma}}
+\def \htheta{\hat{\theta}}
+\def \s{\sigma}
+\def \hy{\hat{y}}
+\def \hY{\hat{Y}}
+\def \v1{\vec{1}}
+\def \e{\varepsilon}
+\def \he{\hat{\e}}
+\def \z{z}
+\def \hVar{\widehat{\Var}}
+\def \hCorr{\widehat{\Corr}}
+\def \hCov{\widehat{\Cov}}
+\def \cN{\mathcal{N}}
+
+
+
+
+
+\def \putyourname{\fbox{
+    \begin{minipage}{42em}
+      Фамилия, имя, номер группы:\vspace*{3ex}\par
+      \noindent\dotfill\vspace{2mm}
+    \end{minipage}
+  }
+}
+
+\def \checktable{
+\begin{minipage}{42em}
+\begin{tabular}{|m{2cm}|m{2cm}|m{2cm}|m{2cm}|m{2cm}|}
+\hline
+Тест & 1 &  2 & 3 & Итого \\ \hline
+&  &  &  & \\
+ &  &   & & \\
+ \hline
+\end{tabular} $\longleftarrow$ для проверяющего!
+\end{minipage}
+}
+
+\def \testtable{
+\begin{minipage}{42em}
+\vspace{4pt}
+
+Ответы на тест:
+
+\vspace{2pt}
+\begin{tabular}{|m{1cm}|m{1cm}|m{1cm}|m{1cm}|m{1cm}|m{1cm}|m{1cm}|m{1cm}|m{1cm}|m{1cm}|}
+\hline
+1 & 2 &  3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 \\ 
+\hline
+ &  &   &  &  &  &  &  &  &  \\ 
+ &  &   &  &  &  &  &  &  &  \\ 
+\hline
+\end{tabular}
+\end{minipage}
+
+}
+
+
+
+
+
+% [1][3] 1 = one argument, 3 = value if missing
+% эта магия создаёт окружение answerlist
+% именно в окружении answerlist записаны варианты ответов в подключаемых exerciseXX
+% просто \begin{answerlist} сделает ответы в три столбца
+% если ответы длинные, то надо в них руками сделать
+% \begin{answerlist}[1] чтобы они шли в один столбец
+\newenvironment{answerlist}[1][3]{
+\begin{multicols}{#1}
+\begin{enumerate}[label=\fbox{\emph{\Alph*}},ref=\emph{\alph*}]
+}
+{
+\end{enumerate}
+\end{multicols}
+}
+
+\newenvironment{answerlist1}{
+\begin{enumerate}[label=\fbox{\emph{\Alph*}},ref=\emph{\alph*}]
+}
+{
+\end{enumerate}
+}
+
+
+
+\excludecomment{solution} % without solutions
+
+\theoremstyle{definition}
+\newtheorem{question}{Вопрос}
+
+
+
+
+\begin{document}
+
+% \checktable
+
+% \putyourname
+
+% \testtable
+
+\subsection*{Тест}
+
+
+
+\subsection*{Задачи}
+
+\begin{enumerate}
+
+
+\item Рассеянный исследователь Вовочка 555 дней замерял своё потребление шоколада 
+и число решённых задач по эконометрике. 
+Вовочка оценил по своим данным парную регрессию числа решенных задач на потребление шоколада 
+(регрессию с константой), но потерял все результаты вычислений и не справится без вашей помощи!
+
+\begin{enumerate}
+    \item Вовочка запомнил, что 95\%-ый доверительный интервал для коэффициента 
+    при шоколаде был от 1.72 до 8.28. Помогите ему восстановить оценку $\hat\beta_{choc}$  и оценку её стандартного отклонения. 
+  
+    Ошибки в модели для этого и следующего пунктов считайте нормальными.
+\item Помогите Вовочке проверить значимость  $\hat\beta_{choc}$  на 10\% уровне значимости.
+\item Можно ли было бы считать полученные МНК-оценки коэффициентов несмещёнными и эффективными 
+в случае равномерных от -5 до 5 ошибок? Почему?
+\item Можно ли было бы считать полученные МНК-оценки коэффициентов несмещёнными и эффективными 
+в случае равномерных от 0  до 5 ошибок? Почему?
+\end{enumerate}
+
+
+\item Рассмотрим уравнение линейной регрессии $Y_i = \beta X_i + u_i$. 
+Все предпосылки теоремы Гаусса-Маркова выполнены.
+\begin{enumerate}
+\item Найдите МНК  оценку коэффициента $\hb$.
+\item Проверьте,  является  ли эта оценка несмещенной.
+\item Выведите формулу для несмещённой оценки дисперсии этой оценки. 
+\item По выборке оказалось, что $\hb = 2.25$ и $se(\hb)=0.2$. 
+Проинтерпретируйте значение оценки коэффициента.
+\item Выведите формулу оценки дисперсии для ошибки прогноза $\hat Y_{N+1}$.
+\end{enumerate}
+
+\item Для модели $X_i = \beta_0 + \beta_1 Y_i + u_i$ известна МНК-оценка коэффициента $\hb_1 = -1$. 
+Также для данной регрессии известны $N=102$, $\sum (Y_i - \bar Y)^2=10$ и  $TSS=200$. 
+\begin{enumerate}
+    \item  Найдите коэффициент детерминации $R^2$ для этой модели.
+\item Найдите оценку дисперсии оценки коэффициента $\hb_1$.
+\item Для регрессии $\hat Y_i = \hat\alpha_0 + \hat\alpha_1 X_i$ найдите оценку $\hat\alpha_1$.
+\item Найдите выборочный коэффициент корреляции $\hCorr(X,Y)$.
+\end{enumerate}
+
+
+
+\end{enumerate}
+
+\newpage
+
+\section{Решения}
+
+\begin{enumerate}
+    \item Вместо $t_{553}$-распределения можно использовать нормальное $\cN(0;1)$.
+\begin{enumerate}
+    \item {[2]} Критическое значение равно $t_{crit} = 1.96$. 
+
+    Отсюда находим $\hb = 5$ и $se(\hb) = 2$
+    \item {[1]} $t_{obs} = 5/2 = 2.5$. Таблицы не нужны, достаточно помнить, 
+    что при уровне значимости $\alpha=0.05$ критическое значение равно $1.96$. 
+    При более высоком уровне значимости критическое значение падает. Значит $H_0$ отвергается. 
+
+    \item {[1]} Ожидание ошибки равно нулю, дисперсия постоянна, значит условия теоремы Гаусса-Маркова выполнены. 
+    Обе оценки являются несмещёнными и эффективными среди линейных несмещённых оценок. 
+
+    \item {[2]} Ожидание ошибки равно $2.5$, дисперсия постоянна, значит условия теоремы Гаусса-Маркова нарушены.
+    Однако при переносе $2.5$ из ошибки в константу нарушение исчезает. 
+    Оценка наклона: несмещена и эффективна среди линейных несмещённых оценок.
+
+    Оценка константы: смещена на 2.5, поэтому оценка не лежит в классе линейных несмещенных оценок, 
+    и говорить об её эффективности в этом классе бессмысленно. 
+    При этом дисперсия оценки константы равна дисперсии эффективной оценки.
+    
+\end{enumerate}
+
+\item Кратко:
+\begin{enumerate}
+    \item {[1]} $\hb = \frac{\sum X_i Y_i}{\sum X_i^2}$
+    \item {[1]} $\E(\hb) = \beta$
+    \item {[2]} $\Var(\hb) = \frac{\hat\sigma^2_u}{\sum X_i^2}$
+    \item {[1]} $t_{obs} = 11.25$, коэффициент значимо отличен от нуля. 
+    Зависимая переменная в среднем в $2.25$ раз больше регрессора.
+    \item {[2]} $\hVar(\hat Y_{N+1} - Y_{N+1}) = \hat\sigma^2_u \left( 1 + \frac{X_{N+1}^2}{\sum X_i^2}  \right)$
+\end{enumerate}
+
+\item Обратите внимание, что $Y_i$ является регрессором. 
+\begin{enumerate}
+    \item {[2]} $\hb_1 = \frac{\sum (X_i - \bar X)(Y_i - \bar Y)}{\sum (Y_i - \bar Y)^2}$.
+    
+    Следовательно, $\sum (X_i - \bar X)(Y_i - \bar Y) = -10$. 
+
+    Решаем одним махом г) и а)!
+
+    \[
+    \hCorr(X, Y) = \frac{\sum (X_i - \bar X)(Y_i - \bar Y)}{\sqrt{10\cdot 200}} = -\sqrt{5}/10    
+    \]
+
+    Отсюда:
+    \[
+    R^2 = 5/100 = 1/20   
+    \]
+
+    \item {[2]} $RSS = 0.95 \cdot 200 = 190$. Отсюда $\hat\sigma^2_u = 190/100 = 1.9$ и $se^2(\hb_1) = 1.9/10=0.19$.
+    \item {[2]} В узких кругах широко известно, что корреляции по модулю равна среднему геометрическому оценок 
+    в прямой и обратной моделях. 
+
+    \[
+    R^2 = \hat\alpha_1 \cdot \hb_1    
+    \]
+
+    Следовательно, $\hat\alpha_1 = -1/20$.
+
+    \item {[1]} уже решили!
+\end{enumerate}
+
+
+\end{enumerate}
+
+
+\end{document}
