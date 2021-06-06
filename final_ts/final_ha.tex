@@ -1,0 +1,192 @@
+\documentclass[12pt]{article}
+
+\usepackage{tikz} % картинки в tikz
+\usepackage{microtype} % свешивание пунктуации
+
+\usepackage{array} % для столбцов фиксированной ширины
+
+\usepackage{indentfirst} % отступ в первом параграфе
+
+\usepackage{sectsty} % для центрирования названий частей
+\allsectionsfont{\centering}
+
+\usepackage{amsmath} % куча стандартных математических плюшек
+
+\usepackage{comment}
+\usepackage{amsfonts}
+
+\usepackage[top=1.5cm, left=1cm, right=1cm, bottom=1.5cm]{geometry} % размер текста на странице
+
+\usepackage{lastpage} % чтобы узнать номер последней страницы
+
+\usepackage{enumitem} % дополнительные плюшки для списков
+%  например \begin{enumerate}[resume] позволяет продолжить нумерацию в новом списке
+\usepackage{caption}
+
+\usepackage{hyperref} % гиперссылки
+
+\usepackage{multicol} % текст в несколько столбцов
+
+
+\usepackage{fancyhdr} % весёлые колонтитулы
+\pagestyle{fancy}
+\lhead{Домашка}
+\rhead{Эконометрика}
+\lfoot{}
+\cfoot{}
+\rfoot{}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+
+
+
+\usepackage{todonotes} % для вставки в документ заметок о том, что осталось сделать
+% \todo{Здесь надо коэффициенты исправить}
+% \missingfigure{Здесь будет Последний день Помпеи}
+% \listoftodos --- печатает все поставленные \todo'шки
+
+
+% более красивые таблицы
+\usepackage{booktabs}
+% заповеди из докупентации:
+% 1. Не используйте вертикальные линни
+% 2. Не используйте двойные линии
+% 3. Единицы измерения - в шапку таблицы
+% 4. Не сокращайте .1 вместо 0.1
+% 5. Повторяющееся значение повторяйте, а не говорите "то же"
+
+
+\usepackage{fontspec}
+\usepackage{polyglossia}
+
+\setmainlanguage{russian}
+\setotherlanguages{english}
+
+% download "Linux Libertine" fonts:
+% http://www.linuxlibertine.org/index.php?id=91&L=1
+\setmainfont{Linux Libertine O} % or Helvetica, Arial, Cambria
+% why do we need \newfontfamily:
+% http://tex.stackexchange.com/questions/91507/
+\newfontfamily{\cyrillicfonttt}{Linux Libertine O}
+
+\AddEnumerateCounter{\asbuk}{\russian@alph}{щ} % для списков с русскими буквами
+\setlist[enumerate, 2]{label=\asbuk*),ref=\asbuk*}
+%\setlist[enumerate, 1]{label=\asbuk*),ref=\asbuk*}
+
+
+%% эконометрические сокращения
+\DeclareMathOperator{\Cov}{Cov}
+\DeclareMathOperator*{\plim}{plim}
+\DeclareMathOperator{\Corr}{Corr}
+\DeclareMathOperator{\Var}{Var}
+\DeclareMathOperator{\E}{E}
+\let\P\relax
+\DeclareMathOperator{\P}{P}
+\DeclareMathOperator \hVar{\widehat{\Var}}
+\DeclareMathOperator \hCorr{\widehat{\Corr}}
+\DeclareMathOperator \hCov{\widehat{\Cov}}
+
+\newcommand \hb{\hat{\beta}}
+\newcommand \hs{\hat{\sigma}}
+\newcommand \htheta{\hat{\theta}}
+\newcommand \s{\sigma}
+\newcommand \hy{\hat{y}}
+\newcommand \hY{\hat{Y}}
+\newcommand \e{\varepsilon}
+\newcommand \he{\hat{\e}}
+\newcommand \cN{\mathcal{N}}
+
+
+\begin{document}
+
+Можно использовать любой софт с открытым кодом: python, r, julia, gretl, всё, что душе угодно из открытого софта. 
+Работу можно выполнять командой из двух человек или в одиночку. Из трёх нельзя. Из четырёх тоже нельзя. 
+
+\begin{enumerate}
+    \item «Взять языка». Возьми месячный временной ряд. Можно не один, а несколько, чтобы использовать дополнительные ряды как предикторы основного.
+    Не бери цены финансовых инструментов, так как их приращение плохо прогнозируется в силу эффективности рынка.
+    Разумно взять реальные показатели. Если очень хочется работать с финансовыми данными, можно взять волатильность, 
+    она прогнозируется хорошо. Максимально чётко укажи, откуда взяты ряды. Если ряды парсились, то приведи код. 
+
+    \item «Намалевич». Построй графики рядов, графики автокорреляционных функций, графики с нарезкой ряда на годы для иллюстрации сезонности. 
+    
+    \item «Твиттер». Кратко прокомментируй полученные графики. 
+    Явлются ли ряды сезонными? есть ли тренд? стационарны ли ряды? есть ли точки излома? растёт ли амплитуда колебаний ряда?
+    Возьми логарифм ряда, если душа тянется к логарифму.
+
+    % \item «Разделяй и властвуй». Разделите ряды на обучающую и тестовую выборку в пропорции 80\% и 20\%. 
+
+      
+    \item «Двенадцать месяцев». Необходимо исследовать качество прогнозов минимум 6 моделей:
+
+    \begin{itemize}
+        \item Наивная, $\hat y_{t+1} = y_t$.
+        \item Сезонная наивная, $\hat y_{t+1} = y_{t + 1 - 12}$.
+        \item SARIMA(1, 1, 1)(1, 0, 0)[12].
+        \item Алгоритм Хиндмана-Хандакара автоматического подбора SARIMA.
+        \item ETS(AAA)
+        \item ETS с автоматическим выбором по AIC.
+    \end{itemize}      
+    
+    Сравни качество прогнозов по средней абсолютной ошибке MAE на тестовой выборке. В качестве тестовой выборки возьми последний год наблюдений,
+    в качестве обучающей — все остальные наблюдения. 
+    
+    На бонусный балл: сравни качество прогнозов по средней абсолютной ошибке MAE на один шаг вперёд с помощью кросс-валидации. 
+    Кросс-валидацию проводи растущим окном, начав с окна в 80\% исходной выборки. 
+
+    Подсказка. В питоне могут помочь функции \verb|NaiveForecaster|, \verb|ARIMA|, \verb|AutoARIMA|, \verb|ExponentialSmoothing| и \verb|AutoETS| из \verb|sktime|.
+    В r нужное модели есть в пакете \verb|fable|, а графики поможет построить \verb|feasts|. В julia ARIMA и ETS реализованы в пакете \verb|StateSpaceModels|.
+
+    \item «Кто на свете всех милее?» 
+    Выбери наилучшую модель и построй график прогнозов для неё на один год вперёд использовав все 100\% наблюдений как обучающую выборку. 
+
+
+    Ссылки: 
+    \begin{itemize}
+        \item \verb|sktime|: \url{https://www.sktime.org}.
+        \item Прогнозы в sktime, в конце про кросс-валидацию: \url{https://www.sktime.org/en/latest/examples/01_forecasting.html}.
+        \item Картинки для кросс-валидации: \url{https://www.kaggle.com/cworsnup/backtesting-cross-validation-for-timeseries}.
+        \item Изложение алгоритма Хиндмана-Хандакара, да и вся книжка Forecasting Principles and Practice: \url{https://otexts.com/fpp3/arima-r.html}.
+    \end{itemize}
+
+    
+
+    \newpage
+    \item «Хождение в народ». Скачай панельные данные RLMS. Можешь выбрать данные по домохозяйствам, а можешь по индивидам, \url{https://www.hse.ru/rlms/}. 
+    Регистрация там бесплатная и без смс. Описание огромного количества переменных есть в \url{https://www.hse.ru/rlms/code}.
+    К сожалению, данные RLMS выложены в закрытых форматах. Это маленький позор, я с ним пытался бороться, но пока безуспешно.  
+    Если уж никак не удаётся загрузить большую панельку из приватного формата сразу в открытый софт, 
+    открой её в родном закрытом софте и экспортируй нужные переменные в свободный \verb|.csv|.
+    \item «Кому на Руси жить хорошо?». Сформулируй пусть не особо глубокий, но всё же вопрос. 
+    Уровня «Помогает ли потребление огурцов домодчадцами предсказать доход главы семейства?» вполне достаточно. 
+    В данных RLMS много пропусков, поэтому погоня за большим количество предикторов приведёт к выбрасыванию всех наблюдений.
+    Для данного игрового задания одного предиктора достаточно. 
+    \item «Сделай красиво!» Визуализируй данные с целью графического ответа на поставленный вопрос. 
+    \item «Три сестры». Оцени три модели: сквозную модель, FE-модель, RE-модель. С помощью подходящих тестов выбери наилучшую. 
+    
+    Подсказка. В питоне панельки оценивают с помощью \url{https://bashtage.github.io/linearmodels/}, в r — \url{https://cran.r-project.org/web/packages/plm/vignettes/A_plmPackage.html},
+    в julia — \url{https://nosferican.github.io/Econometrics.jl/stable/} или \url{https://github.com/FixedEffects/FixedEffectModels.jl}.
+    \item «Ответ на главный вопрос». Ответь на поставленный вопрос. 
+
+\end{enumerate}
+
+Наставления в добрый путь храброму падавану:
+
+\begin{itemize}
+    \item Работу можно сдать в следующих видах. В виде читабельного отчёта в \verb|.pdf|, приложив исходный \verb|.tex|. 
+    В виде исполняемого \verb|.ipynb|. В виде \verb|.html| отчёта, сгенерированного из \verb|.Rmd| или \verb|.jmd|, приложив исходник. 
+
+    Ссылки: с \verb|.ipynb| большинство знакомо, поэтому \url{https://github.com/JunoLab/Weave.jl}, \url{https://bookdown.org/yihui/rmarkdown-cookbook/}.
+
+    \item Приложи исходные данные, ряды и нужную для исследования часть панельки, в виде \verb|.csv|. 
+    Не надо прикладывать всю скаченную панельку, но только лишь нужную часть. 
+
+    \item Мелкие детали, отсутствующие в условии, заполни самостоятельно, чётко описав свой выбор.
+    
+    \item Дедлайн: мягкий — 16 июня в 21:00. После мягкого — штраф минус 30\%, жёсткий — 17 июня в 21:00, \url{https://classroom.github.com/a/MKA14xZ7}. 
+    
+    \item Да пребудет с тобой Сила!
+\end{itemize}
+
+
+\end{document}
